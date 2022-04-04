@@ -402,7 +402,7 @@ public class EthereumPayoutHandler : PayoutHandlerBase,
             var maxPriorityFeePerGas = await rpcClient.ExecuteAsync<string>(logger, EC.MaxPriorityFeePerGas, ct);
             request.Gas = extraConfig.Gas;
             request.MaxPriorityFeePerGas = maxPriorityFeePerGas.Response.IntegralFromHex<ulong>();
-            request.MaxFeePerGas = extraConfig.MaxFeePerGas;
+            request.MaxFeePerGas = extraConfig.Gas + request.MaxPriorityFeePerGas;
         }
 
         var response = await rpcClient.ExecuteAsync<string>(logger, EC.SendTx, ct, new[] { request });
