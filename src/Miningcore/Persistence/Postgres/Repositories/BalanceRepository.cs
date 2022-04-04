@@ -86,7 +86,7 @@ public class BalanceRepository : IBalanceRepository
         return await con.QuerySingleOrDefaultAsync<decimal>(query, new { poolId, address });
     }
 
-    public async Task<Balance[]> GetPoolBalancesOverThresholdAsync(IDbConnection con, string poolId, decimal minimum, decimal gas))
+    public async Task<Balance[]> GetPoolBalancesOverThresholdAsync(IDbConnection con, string poolId, decimal minimum, decimal gas)
     {
         if (gas == 0)
         {
