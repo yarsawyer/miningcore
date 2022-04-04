@@ -45,7 +45,6 @@ CREATE TABLE balances
 	poolid TEXT NOT NULL,
 	address TEXT NOT NULL,
 	amount decimal(28,12) NOT NULL DEFAULT 0,
-	gas decimal(28,12) NOT NULL DEFAULT 0,
 	created TIMESTAMPTZ NOT NULL,
 	updated TIMESTAMPTZ NOT NULL,
 
@@ -71,6 +70,7 @@ CREATE TABLE miner_settings
 	poolid TEXT NOT NULL,
 	address TEXT NOT NULL,
 	paymentthreshold decimal(28,12) NOT NULL,
+	gas decimal(28,12) NOT NULL,
 	created TIMESTAMPTZ NOT NULL,
 	updated TIMESTAMPTZ NOT NULL,
 
