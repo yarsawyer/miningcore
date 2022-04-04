@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using NLog;
 using Contract = Miningcore.Contracts.Contract;
 using EC = Miningcore.Blockchain.Ethereum.EthCommands;
+using Miningcore.Blockchain.Ethereum.Configuration;
 
 namespace Miningcore.Payments;
 
@@ -201,7 +202,8 @@ public class PayoutManager : BackgroundService
             var jsonSerializerSettings = ctx.Resolve<JsonSerializerSettings>();
             var rpcClient = new RpcClient(config.Daemons.First(x => string.IsNullOrEmpty(x.Category)), jsonSerializerSettings, messageBus, config.Id);
             var maxPriorityFeePerGas = await rpcClient.ExecuteAsync<string>(logger, EC.MaxPriorityFeePerGas, ct);
-            maxGas = maxPriorityFeePerGas.Response.IntegralFromHex<ulong>();
+            var extraConfig = config.PaymentProcessing.Extra.SafeExtensionDataAs<EthereumPoolPaymentProcessingConfigExtra>();
+            maxGas = maxPriorityFeePerGas.Response.IntegralFromHex<ulong>() + extraConfig.Gas;
         }
         var poolBalancesOverMinimum = await cf.Run(con =>
             balanceRepo.GetPoolBalancesOverThresholdEthAsync(con, config.Id, config.PaymentProcessing.MinimumPayment, maxGas));
