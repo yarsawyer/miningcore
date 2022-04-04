@@ -12,6 +12,5 @@ public interface IBalanceRepository
     Task<int> GetBalanceChangeCountByTagAsync(IDbConnection con, IDbTransaction tx, string poolId, string tag);
     Task<BalanceChange[]> GetBalanceChangesByTagAsync(IDbConnection con, IDbTransaction tx, string poolId, string tag);
 
-    Task<Balance[]> GetPoolBalancesOverThresholdAsync(IDbConnection con, string poolId, decimal minimum);
-    Task<Balance[]> GetPoolBalancesOverThresholdEthAsync(IDbConnection con, string poolId, decimal minimum, decimal gas);
+    Task<Balance[]> GetPoolBalancesOverThresholdAsync(IDbConnection con, string poolId, decimal minimum, decimal gas);
 }

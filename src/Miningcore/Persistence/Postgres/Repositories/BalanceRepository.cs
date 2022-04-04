@@ -86,20 +86,7 @@ public class BalanceRepository : IBalanceRepository
         return await con.QuerySingleOrDefaultAsync<decimal>(query, new { poolId, address });
     }
 
-    public async Task<Balance[]> GetPoolBalancesOverThresholdAsync(IDbConnection con, string poolId, decimal minimum)
-    {
-
-        const string query = @"SELECT b.*
-            FROM balances b
-            LEFT JOIN miner_settings ms ON ms.poolid = b.poolid AND ms.address = b.address
-            WHERE b.poolid = @poolId AND b.amount >= COALESCE(ms.paymentthreshold, @minimum)";
-
-        return (await con.QueryAsync<Entities.Balance>(query, new { poolId, minimum }))
-            .Select(mapper.Map<Balance>)
-            .ToArray();
-    }
-
-    public async Task<Balance[]> GetPoolBalancesOverThresholdEthAsync(IDbConnection con, string poolId, decimal minimum, decimal gas)
+    public async Task<Balance[]> GetPoolBalancesOverThresholdAsync(IDbConnection con, string poolId, decimal minimum, decimal gas))
     {
         if (gas == 0)
         {

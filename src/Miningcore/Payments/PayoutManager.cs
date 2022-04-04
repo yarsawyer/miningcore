@@ -206,7 +206,7 @@ public class PayoutManager : BackgroundService
             maxGas = maxPriorityFeePerGas.Response.IntegralFromHex<ulong>() + extraConfig.Gas;
         }
         var poolBalancesOverMinimum = await cf.Run(con =>
-            balanceRepo.GetPoolBalancesOverThresholdEthAsync(con, config.Id, config.PaymentProcessing.MinimumPayment, maxGas));
+            balanceRepo.GetPoolBalancesOverThresholdAsync(con, config.Id, config.PaymentProcessing.MinimumPayment, maxGas));
 
 
         if(poolBalancesOverMinimum.Length > 0)
