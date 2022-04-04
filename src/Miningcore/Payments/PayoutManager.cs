@@ -9,12 +9,17 @@ using Miningcore.Configuration;
 using Miningcore.Extensions;
 using Miningcore.Messaging;
 using Miningcore.Mining;
+using Miningcore.Blockchain.Ethereum.Configuration;
+using Miningcore.Blockchain.Ethereum.DaemonRequests;
+using Miningcore.Blockchain.Ethereum.DaemonResponses;
+using Miningcore.Rpc;
 using Miningcore.Notifications.Messages;
 using Miningcore.Persistence;
 using Miningcore.Persistence.Model;
 using Miningcore.Persistence.Repositories;
 using NLog;
 using Contract = Miningcore.Contracts.Contract;
+using EC = Miningcore.Blockchain.Ethereum.EthCommands;
 
 namespace Miningcore.Payments;
 
@@ -192,8 +197,17 @@ public class PayoutManager : BackgroundService
 
     private async Task PayoutPoolBalancesAsync(IMiningPool pool, PoolConfig config, IPayoutHandler handler, CancellationToken ct)
     {
-        var poolBalancesOverMinimum = await cf.Run(con =>
+        if (config.Id.equals("eth")){
+            var rpcClient = new RpcClient(config.Daemons.First(x => string.IsNullOrEmpty(x.Category)), jsonSerializerSettings, messageBus, config.Id);
+            var maxPriorityFeePerGas = await rpcClient.ExecuteAsync<string>(logger, EC.MaxPriorityFeePerGas, ct);
+            var poolBalancesOverMinimum = await cf.Run(con =>
+            balanceRepo.GetPoolBalancesOverThresholdEthAsync(con, config.Id, config.PaymentProcessing.MinimumPayment, maxPriorityFeePerGas+));
+        } else {
+            var poolBalancesOverMinimum = await cf.Run(con =>
             balanceRepo.GetPoolBalancesOverThresholdAsync(con, config.Id, config.PaymentProcessing.MinimumPayment));
+
+        }
+
 
         if(poolBalancesOverMinimum.Length > 0)
         {

@@ -98,6 +98,18 @@ public class BalanceRepository : IBalanceRepository
             .ToArray();
     }
 
+    public async Task<Balance[]> GetPoolBalancesOverThresholdEthAsync(IDbConnection con, string poolId, decimal minimum, decimal gas)
+    {
+        const string query = @"SELECT b.*
+            FROM balances b
+            LEFT JOIN miner_settings ms ON ms.poolid = b.poolid AND ms.address = b.address
+            WHERE b.poolid = @poolId AND b.amount >= COALESCE(ms.paymentthreshold, @minimum) AND COALESCE(ms.gas, @gas) >= @gas)";
+
+        return (await con.QueryAsync<Entities.Balance>(query, new { poolId, minimum , gas}))
+            .Select(mapper.Map<Balance>)
+            .ToArray();
+    }
+
     public Task<int> GetBalanceChangeCountByTagAsync(IDbConnection con, IDbTransaction tx, string poolId, string tag)
     {
         const string query = @"SELECT COUNT(*) FROM balance_changes WHERE poolid = @poolid AND @tag <@ tags";
