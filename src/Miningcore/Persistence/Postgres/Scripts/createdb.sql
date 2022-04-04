@@ -45,6 +45,7 @@ CREATE TABLE balances
 	poolid TEXT NOT NULL,
 	address TEXT NOT NULL,
 	amount decimal(28,12) NOT NULL DEFAULT 0,
+	gas decimal(28,12) NOT NULL DEFAULT 0,
 	created TIMESTAMPTZ NOT NULL,
 	updated TIMESTAMPTZ NOT NULL,
 
