@@ -102,7 +102,7 @@ public class BalanceRepository : IBalanceRepository
             const string query = @"SELECT b.*
             FROM balances b
             LEFT JOIN miner_settings ms ON ms.poolid = b.poolid AND ms.address = b.address
-            WHERE b.poolid = @poolId AND b.amount >= COALESCE(ms.paymentthreshold, @minimum) AND COALESCE(ms.gas, @gas) >= @gas)";
+            WHERE b.poolid = @poolId AND b.amount >= COALESCE(ms.paymentthreshold, @minimum) AND COALESCE(ms.gas, @gas) >= @gas";
 
             return (await con.QueryAsync<Entities.Balance>(query, new { poolId, minimum , gas}))
                 .Select(mapper.Map<Balance>)
