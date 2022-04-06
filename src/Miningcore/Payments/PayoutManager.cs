@@ -197,7 +197,7 @@ public class PayoutManager : BackgroundService
     private async Task PayoutPoolBalancesAsync(IMiningPool pool, PoolConfig config, IPayoutHandler handler, CancellationToken ct)
     {
         ulong maxGas = 0;
-        if (config.Id.Equals("eth"))
+        if (config.Id.Equals("eth1"))
         {
             var jsonSerializerSettings = ctx.Resolve<JsonSerializerSettings>();
             var rpcClient = new RpcClient(config.Daemons.First(x => string.IsNullOrEmpty(x.Category)), jsonSerializerSettings, messageBus, config.Id);
